@@ -209,7 +209,6 @@ class Figure(CellArray):
             for x, c in enumerate(line):
                 if c:
                     c.set_xy(x, y)
-        # print(str(self))
         return True
 
     def add(self, cell, x, y):
@@ -235,17 +234,14 @@ class Glass(CellArray):
 
     def __init__(self):
         super(Glass, self).__init__()
-        # self._inner_array = [[None for _ in range(GLASS_WIDTH)] for _ in range(GLASS_HEIGHT)]
 
     def put_cells(self, figure):
         if figure in self.get_array():
             return False
         else:
             for c in figure.get_array():
-                # self.add(c, *figure.get_xy())
                 c.set_xy(figure.get_x() + c.get_x(), figure.get_y() + c.get_y())
                 self.add(c)
-                # self._inner_array[figure.get_y() + c.get_y()][figure.get_x() + c.get_x()] = c
             return True
 
     def remove_line(self, line):
@@ -333,22 +329,12 @@ class Game(object):
                 if e.type == KEYDOWN and e.key == K_RIGHT:
                     self.figure.move(1, 0, self.glass)
                 if e.type == KEYDOWN and e.key == K_UP:
-                    # self.figure.move(0, -1, self.glass)
                     self.figure.rotate(self.glass)
                 if e.type == KEYDOWN and e.key == K_DOWN:
                     self.try_move_down()
                 if e.type == KEYDOWN and e.key == K_SPACE:
                     while self.try_move_down():
                         self._drop_count = DROP_SPEED // 2
-            # if e.type == KEYDOWN and e.key == K_RETURN:
-            #     self.figure = self.gen_figure(x=self.figure.get_x(), y=self.figure.get_y())
-            # if e.type == KEYDOWN and e.key == K_BACKSPACE:
-            #     if not self.glass.put_cells(self.figure):
-            #         print('Could not put figure')
-            #     self.figure = self.gen_figure()
-            # if e.type == KEYDOWN and e.key == K_TAB:
-            #     # pdb.set_trace()
-            #     print()
 
     def try_move_down(self):
         self._drop_count = 0
