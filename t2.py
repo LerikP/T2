@@ -1,16 +1,26 @@
+import pygame_sdl2
+pygame_sdl2.import_as_pygame()
+
 import pygame
 from pygame.locals import *
 import sys
 import random
 from copy import deepcopy
 
-ANDROID_SCALE = 2
-CELL_SIZE = 20
+ANDROID = True
+
+if ANDROID:
+    SCALE = 2
+    TILE_FILE = 'tile_android.png'
+else:
+    SCALE = 1
+    TILE_FILE = 'tile_pc.png'
+
+CELL_SIZE = 26 * SCALE
 CELL = (CELL_SIZE, CELL_SIZE)
-DISPLAY_WIDTH = 360
-DISPLAY_HEIGHT = 640
+DISPLAY_WIDTH = 360 * SCALE
+DISPLAY_HEIGHT = 640 * SCALE
 DISPLAY = (DISPLAY_WIDTH, DISPLAY_HEIGHT)
-OFFSET = (10, 30)
 SHAPES = [['0000', '1111', '0000', '0000'], ['11', '11'],
           ['010', '111', '000'], ['110', '011', '000'],
           ['011', '110', '000'], ['100', '111', '000'],
@@ -19,7 +29,9 @@ SHAPES = [['0000', '1111', '0000', '0000'], ['11', '11'],
 GLASS_WIDTH = 10
 GLASS_HEIGHT = 20
 
-LINE_WIDTH = 2
+LINE_WIDTH = 2 * SCALE
+Y_OFF = 5 * SCALE
+OFFSET = ((DISPLAY_WIDTH - GLASS_WIDTH * CELL_SIZE) // 2, DISPLAY_HEIGHT - GLASS_HEIGHT * CELL_SIZE - Y_OFF)
 GLASS_UL = (OFFSET[0] - LINE_WIDTH, OFFSET[1])
 GLASS_LR = (OFFSET[0] + GLASS_WIDTH * CELL_SIZE,
             OFFSET[1] + GLASS_HEIGHT * CELL_SIZE)
@@ -43,7 +55,7 @@ def fill_color(img, from_color, to_color):
 
 
 def load_image(color):
-    image = pygame.image.load('resourse\\tile.png')
+    image = pygame.image.load('resourse\\{}'.format(TILE_FILE))
     image = fill_color(image, WHITE, color)
     image = fill_color(image, BLACK, color // BLACKEN)
     return image
@@ -272,11 +284,11 @@ class Game(object):
         self.glass = Glass()
         pygame.display.set_caption('Simple tetris')
         pygame.display.set_icon(IMAGES[random.choice(range(len(COLORS)))])
-        self.screen = pygame.display.set_mode(DISPLAY, HWPALETTE, 8)
+        self.screen = pygame.display.set_mode(DISPLAY)
         self.bg = pygame.Surface(DISPLAY)
         self.bg.fill(Color('black'))
         self.figure = self.gen_figure()
-        self.next_figure = self.gen_figure(11, 5)
+        self.next_figure = self.gen_next_figure()
         self._drop_count = 0
         self.score = 0
         self.score_font = pygame.font.Font('Anonymous Pro.ttf', 30)
@@ -314,6 +326,9 @@ class Game(object):
         if rotation is None:
             rotation = random.choice(range(4))
         return Figure(x, y, shape, color, rotation)
+
+    def gen_next_figure(self, x=7, y=-4, shape=None, color=None, rotation=None):
+        return self.gen_figure(x, y, shape, color, rotation)
 
     def check_lines(self):
         lines = 0
@@ -364,7 +379,7 @@ class Game(object):
             self.screen.blit(game_over, (40, 300))
             pygame.display.update()
             self.run = False
-        self.next_figure = self.gen_figure(11, 5)
+        self.next_figure = self.gen_next_figure()
 
     def start(self):
         while True:

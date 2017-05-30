@@ -1,0 +1,1 @@
+{"layout": "internal", "orientation": "portrait", "package": "org.lerik.t2", "google_play_key": null, "include_pil": false, "expansion": false, "name": "Tetris2", "source": false, "icon_name": "T2", "version": "0.1", "store": "none", "target_version": 14, "permissions": ["VIBRATE"], "include_sqlite": false, "google_play_salt": null, "numeric_version": "1"}
