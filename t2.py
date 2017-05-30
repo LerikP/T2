@@ -4,19 +4,25 @@ import sys
 import random
 from copy import deepcopy
 
-CELL_WIDTH = 32
-CELL = (CELL_WIDTH, CELL_WIDTH)
-DISPLAY_WIDTH = 510
-DISPLAY_HEIGHT = 610
+ANDROID_SCALE = 2
+CELL_SIZE = 20
+CELL = (CELL_SIZE, CELL_SIZE)
+DISPLAY_WIDTH = 360
+DISPLAY_HEIGHT = 640
 DISPLAY = (DISPLAY_WIDTH, DISPLAY_HEIGHT)
-OFFSET = (20, 50)
+OFFSET = (10, 30)
 SHAPES = [['0000', '1111', '0000', '0000'], ['11', '11'],
           ['010', '111', '000'], ['110', '011', '000'],
           ['011', '110', '000'], ['100', '111', '000'],
           ['001', '111', '000']]
 
 GLASS_WIDTH = 10
-GLASS_HEIGHT = 17
+GLASS_HEIGHT = 20
+
+LINE_WIDTH = 2
+GLASS_UL = (OFFSET[0] - LINE_WIDTH, OFFSET[1])
+GLASS_LR = (OFFSET[0] + GLASS_WIDTH * CELL_SIZE,
+            OFFSET[1] + GLASS_HEIGHT * CELL_SIZE)
 
 DROP_SPEED = 25
 
@@ -87,8 +93,8 @@ class Cell(object):
         self._y += y
 
     def draw(self, screen, off):
-        x = ((self._x + off[0]) * CELL_WIDTH) + OFFSET[0]
-        y = ((self._y + off[1]) * CELL_WIDTH) + OFFSET[1]
+        x = ((self._x + off[0]) * CELL_SIZE) + OFFSET[0]
+        y = ((self._y + off[1]) * CELL_SIZE) + OFFSET[1]
         screen.blit(self._image, (x, y))
 
     def __add__(self, delta):
@@ -282,9 +288,9 @@ class Game(object):
         # Backgrownd
         self.screen.blit(self.bg, (0, 0))
         # Glass border
-        pygame.draw.line(self.screen, WHITE, (18, 49), (18, 595), 2)
-        pygame.draw.line(self.screen, WHITE, (340, 595), (18, 595), 2)
-        pygame.draw.line(self.screen, WHITE, (340, 595), (340, 49), 2)
+        pygame.draw.line(self.screen, WHITE, (GLASS_UL[0], GLASS_UL[1]), (GLASS_UL[0], GLASS_LR[1]), LINE_WIDTH)
+        pygame.draw.line(self.screen, WHITE, (GLASS_LR[0], GLASS_LR[1]), (GLASS_UL[0], GLASS_LR[1]), LINE_WIDTH)
+        pygame.draw.line(self.screen, WHITE, (GLASS_LR[0], GLASS_LR[1]), (GLASS_LR[0], GLASS_UL[1]), LINE_WIDTH)
         # Score
         label = self.score_font.render('Score:', 0, (255, 255, 255))
         score = self.score_font.render(str(self.score), 0, (255, 255, 255))
