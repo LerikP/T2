@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 import sys
 import random
-import pdb
 from copy import deepcopy
 
 CELL_WIDTH = 32
