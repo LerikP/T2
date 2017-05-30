@@ -265,6 +265,8 @@ class Game(object):
     def __init__(self):
         pygame.init()
         self.glass = Glass()
+        pygame.display.set_caption('Simple tetris')
+        pygame.display.set_icon(IMAGES[random.choice(range(len(COLORS)))])
         self.screen = pygame.display.set_mode(DISPLAY, HWPALETTE, 8)
         self.bg = pygame.Surface(DISPLAY)
         self.bg.fill(Color('black'))
@@ -274,6 +276,7 @@ class Game(object):
         self.score = 0
         self.score_font = pygame.font.Font('Anonymous Pro.ttf', 30)
         self.next_fig_font = pygame.font.Font('Anonymous Pro.ttf', 20)
+        self.game_over_font = pygame.font.Font('Anonymous Pro.ttf', 60)
         self.run = True
 
     def draw(self):
@@ -352,7 +355,9 @@ class Game(object):
                                       color=self.next_figure._color,
                                       rotation=self.next_figure._rotation)
         if not self.figure.available(glass=self.glass):
-            print('Game over')
+            game_over = self.game_over_font.render('GAME OVER', 0, (255, 255, 255))
+            self.screen.blit(game_over, (40, 300))
+            pygame.display.update()
             self.run = False
         self.next_figure = self.gen_figure(11, 5)
 
