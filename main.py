@@ -7,7 +7,7 @@ import sys
 import random
 from copy import deepcopy
 
-ANDROID = True
+ANDROID = False
 
 if ANDROID:
     SCALE = 2
@@ -55,7 +55,9 @@ def fill_color(img, from_color, to_color):
 
 
 def load_image(color):
-    image = pygame.image.load('resourse\\{}'.format(TILE_FILE))
+    # image = pygame.Surface((CELL_SIZE, CELL_SIZE))
+    # image.fill(Color('white'))
+    image = pygame.image.load('resource\\{}'.format(TILE_FILE))
     image = fill_color(image, WHITE, color)
     image = fill_color(image, BLACK, color // BLACKEN)
     return image
@@ -171,7 +173,7 @@ class CellArray(object):
 
 
 class Figure(CellArray):
-    """Contains current figure"""
+    """Contains figure"""
 
     def __init__(self, x, y, shape, color, rotation=0):
         self._color = color
@@ -291,9 +293,9 @@ class Game(object):
         self.next_figure = self.gen_next_figure()
         self._drop_count = 0
         self.score = 0
-        self.score_font = pygame.font.Font('Anonymous Pro.ttf', 30)
-        self.next_fig_font = pygame.font.Font('Anonymous Pro.ttf', 20)
-        self.game_over_font = pygame.font.Font('Anonymous Pro.ttf', 60)
+        self.score_font = pygame.font.Font('Anonymous Pro.ttf', 30 * SCALE)
+        self.next_fig_font = pygame.font.Font('Anonymous Pro.ttf', 20 * SCALE)
+        self.game_over_font = pygame.font.Font('Anonymous Pro.ttf', 60 * SCALE)
         self.run = True
 
     def draw(self):
@@ -306,15 +308,15 @@ class Game(object):
         # Score
         label = self.score_font.render('Score:', 0, (255, 255, 255))
         score = self.score_font.render(str(self.score), 0, (255, 255, 255))
-        self.screen.blit(label, (360, 100))
-        self.screen.blit(score, (360, 130))
+        self.screen.blit(label, (20 * SCALE, 10 * SCALE))
+        self.screen.blit(score, (20 * SCALE, 35 * SCALE))
         # Glass
         self.glass.draw(self.screen)
         # Figure
         self.figure.draw(self.screen)
         # Next figure
         next_fig_label = self.next_fig_font.render('Next figure:', 0, (255, 255, 255))
-        self.screen.blit(next_fig_label, (350, 185))
+        self.screen.blit(next_fig_label, (120 * SCALE, 40 * SCALE))
         self.next_figure.draw(self.screen)
         pygame.display.update()
 
@@ -327,7 +329,7 @@ class Game(object):
             rotation = random.choice(range(4))
         return Figure(x, y, shape, color, rotation)
 
-    def gen_next_figure(self, x=7, y=-4, shape=None, color=None, rotation=None):
+    def gen_next_figure(self, x=8, y=-4, shape=None, color=None, rotation=None):
         return self.gen_figure(x, y, shape, color, rotation)
 
     def check_lines(self):
@@ -376,7 +378,7 @@ class Game(object):
                                       rotation=self.next_figure._rotation)
         if not self.figure.available(glass=self.glass):
             game_over = self.game_over_font.render('GAME OVER', 0, (255, 255, 255))
-            self.screen.blit(game_over, (40, 300))
+            self.screen.blit(game_over, (40 * SCALE, 300 * SCALE))
             pygame.display.update()
             self.run = False
         self.next_figure = self.gen_next_figure()
