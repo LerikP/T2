@@ -37,7 +37,7 @@ def fill_color(img, from_color, to_color):
 
 
 def load_image(color):
-    image = pygame.image.load('resourse\\tile.png')
+    image = pygame.image.load('resource\\tile.png')
     image = fill_color(image, WHITE, color)
     image = fill_color(image, BLACK, color // BLACKEN)
     return image
@@ -49,15 +49,11 @@ IMAGES = {c: load_image(COLORS[c]) for c in range(len(COLORS))}
 class Cell(object):
     """Contains single cell"""
 
-    def __init__(self, full=False, color=0, x=0, y=0):
-        self._full = full
+    def __init__(self, color=0, x=0, y=0):
         self._color = color
         self._x = x
         self._y = y
         self._image = IMAGES[color]
-
-    def is_full(self):
-        return self._full
 
     def color(self):
         return self._color
@@ -75,9 +71,6 @@ class Cell(object):
         self._color = color
         self._image = self._load_image()
 
-    def set_full(self, full):
-        self._full = full
-
     def set_xy(self, x, y):
         self._x = x
         self._y = y
@@ -92,13 +85,13 @@ class Cell(object):
         screen.blit(self._image, (x, y))
 
     def __add__(self, delta):
-        return Cell(self._full, self._color, self._x + delta[0], self._y + delta[1])
+        return Cell(self._color, self._x + delta[0], self._y + delta[1])
 
     def __deepcopy__(self, memo):
-        return Cell(self._full, self._color, self._x, self._y)
+        return Cell(self._color, self._x, self._y)
 
     def __str__(self):
-        return 'X:{}, Y:{}, color:{}, full:{}'.format(self._x, self._y, COLORS[self._color], self._full)
+        return 'X:{}, Y:{}, color:{}'.format(self._x, self._y, COLORS[self._color])
 
 
 class CellArray(object):
@@ -163,7 +156,7 @@ class Figure(CellArray):
         for y, line in enumerate(SHAPES[self._shape]):
             for x, c in enumerate(line):
                 if SHAPES[self._shape][y][x] == '1':
-                    self.add(Cell(True, self._color, x, y), x, y)
+                    self.add(Cell(self._color, x, y), x, y)
         for r in range(self._rotation):
             self.rotate(check=False)
 
